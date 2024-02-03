@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse_textures.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: about <about@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rabou-rk <rabou-rk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 16:26:07 by about             #+#    #+#             */
-/*   Updated: 2023/12/14 19:33:06 by about            ###   ########.fr       */
+/*   Updated: 2024/02/03 17:45:14 by rabou-rk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../cub.h"
+#include"cub.h"
 
 void	check_spaces(char *line)
 {
@@ -40,8 +40,9 @@ char *parse_path(char *line)
 	len = ft_strlen(path);
 	while (*path == ' ')
 		path++;
-	while (len > 0 && path[len - 1] == ' ')
+	while (len > 0 && (path[len - 1] == ' ' || path[len - 1] == '\n'))
 		path[--len] = '\0';
+	cubname(path, ".xpm", "Error: textures must be in '.xpm' format");
 	return (path);
 }
 char *remove_spaces(char *line)
@@ -66,43 +67,41 @@ void	check_missing(t_info *info)
 	else if (!info->floor || !info->ceiling)
 		ft_error("Error: Missing color");
 }
+void	assignthis(char **texture, char *line, int *i, int *flag)
+{
+	if(*flag)
+		ft_error("Error: duplicated texture!");
+	*texture = parse_path(line);
+	*flag = 1;
+	(*i)++;
+}
 void	parse_textures(t_info *info)
-{    
+{
 	char	*line;
 	int		i;
-
+	int		j;
+	
+	j = 0;
 	i = 0;
-	while (i < 6)
+	while(i < 7)
 	{
-		line = info->map[info->line_index];
+		line = info->map[j];
 		if(!line)
 			break ;
 		line = remove_spaces(line);
-		info->map[info->line_index] = line;
+		info->map[j] = line;
 		if (line[0] == 'N' && line[1] == 'O' && line[2] == ' ')
-		{
-			info->north = parse_path(line);
-			i++;	
-		}
+			assignthis(&info->north, line, &i, &info->found_no);
 		else if (line[0] == 'S' && line[1] == 'O' && line[2] == ' ')
-		{
-			info->south = parse_path(line);
-			i++;	
-		}
+			assignthis(&info->south, line, &i, &info->found_so);
 		else if (line[0] == 'W' && line[1] == 'E' && line[2] == ' ')
-		{
-			info->west = parse_path(line);
-			i++;	
-		}
+			assignthis(&info->west, line, &i, &info->found_we);
 		else if (line[0] == 'E' && line[1] == 'A' && line[2] == ' ')
-		{
-			info->east = parse_path(line);
-			i++;	
-		}
+			assignthis(&info->east, line, &i, &info->found_ea);
 		else if (line[0] == 'F' && line[1] == ' ') 
-			parse_colors_f(line, info , &i);
+			parse_colors_f(line, info , &i, &info->found_f);
 		else if (line[0] == 'C' && line[1] == ' ')
-			parse_colors_c(line, info , &i);
-		info->line_index++;
-    }
+			parse_colors_c(line, info , &i, &info->found_c);
+		j++;
+	}
 }

@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   readfile.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: about <about@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rabou-rk <rabou-rk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:02:45 by about             #+#    #+#             */
-/*   Updated: 2023/12/14 16:28:57 by about            ###   ########.fr       */
+/*   Updated: 2024/02/03 17:46:35 by rabou-rk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../cub.h"
+#include"cub.h"
 
-void	cubname(char *filename)
+void	cubname(char *filename, char *name, char *error)
 {
 	int len = ft_strlen(filename);
 
-	if (len < 4 || strcmp(filename + len - 4, ".cub") != 0)
-		ft_error("Error: The filename must be in .cub format");
+	if (len < 4 || strcmp(filename + len - 4, name) != 0)
+		ft_error(error);
 }
 char	**readfile(char *file)
 {
@@ -27,7 +27,7 @@ char	**readfile(char *file)
 	char **mapped;
 	char *tmp;
 
-	cubname(file);
+	cubname(file, ".cub", "Error: The filename must be in .cub format");
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		ft_error("Could not open file.");

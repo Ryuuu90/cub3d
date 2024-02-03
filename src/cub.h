@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: about <about@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rabou-rk <rabou-rk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 19:44:09 by about             #+#    #+#             */
-/*   Updated: 2023/12/27 18:41:52 by about            ###   ########.fr       */
+/*   Updated: 2024/02/03 18:02:26 by rabou-rk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,12 @@
 # include <math.h> 
 # include <mlx.h>
 # include <stdio.h>
-# include "./libft/libft.h"
-# include "./get_next_line/get_next_line.h"
+# include "../libft/libft.h"
+# include "../get_next_line/get_next_line.h"
 
-# define TILE 32
-# define WIDTH 1500
-# define HEIGHT 1500
-# define MOVE_SPEED 20
+# define TILE 64
+# define WIDTH 840
+# define HEIGHT 430
 # define PI 3.1415926535
 # define FANGLE 60 * (PI / 180)
 
@@ -37,22 +36,28 @@ typedef struct s_ray {
 	int right_ray;
 	int up_ray;
 	int down_ray;
+	int horiz;
 	int cont_wall_hit; 
-
 } t_ray;
 
 typedef struct s_player {
 	float		x;
 	float		y;
-	double	radius;
-	double	dir_x;
-	double	dir_y;
-	double	player_angle;
+	float		xr;
+	float		yr;
+	float	radius;
+	float	player_angle;
 	int		sidemove;
+	int		rotation_move;
 	int		forwardmove;
-	double	rotation_dir;
-	int movespeed;
-	double	rotation_speed;
+	float	rotation_dir;
+	float movespeed;
+	float	rotation_speed;
+	long pro_wall_h;
+	long top_pixel;
+	long	bottom_pixel;
+	int horizslid;
+	
 } t_player;
 
 typedef struct s_img {
@@ -63,6 +68,7 @@ typedef struct s_img {
 	int		end;
 }	t_img;
 typedef struct s_game {
+	int			flag;
 	void		*mlx;
 	void		*win;
 	void		*frame;
@@ -72,8 +78,9 @@ typedef struct s_game {
 	t_player	*player;
 	t_img *img;
 	t_img *img2;
-	t_ray ray[WIDTH];
 	int j;
+	t_ray ray[WIDTH];
+	int i;
 } t_game;
 
 typedef struct s_colors {
@@ -91,7 +98,13 @@ typedef struct s_info {
 	char		**floor;
 	char		**ceiling;
 	char		**map;
-	int			line_index;
+	char		**map_2;
+	int			found_no;
+	int			found_so;
+	int			found_we;
+	int			found_ea;
+	int			found_f;
+	int			found_c;
 	t_colors	f_1;
 	t_colors	c_1;
 } t_info;
@@ -109,21 +122,25 @@ char	*remove_spaces(char *line);
 int		parse_rgb(char **line, t_info *info, int flag);
 void	check_spaces(char *line);
 void	check_fill(char **line, int *r ,int *g, int *b);
-void	cubname(char *filename);
-void	parse_colors_c(char *line, t_info *info, int *i);
-void	parse_colors_f(char *line, t_info *info, int *i);
+void	cubname(char *filename, char *name, char *error);
+void	parse_colors_c(char *line, t_info *info, int *i, int *flag);
+void	parse_colors_f(char *line, t_info *info, int *i, int *flag);
 void	check_missing(t_info *info);
 // parse map
+int		find_index(char **map);
+void	cutmap(t_info *info);
 void	check_map(char **map, int i, int *player);
 void	check_first(char *wall);
 void	parse_map(t_info *info);
 void	assign(char **place, char *line, int *i);
 void	check_missing(t_info *info);
+char	*parse_path(char *line);
+void	assignthis(char **texture, char *line, int *i, int *flag);
 // game graphics
 void    launch_game(t_info *info, t_game *game, t_player *player, t_img *img);
 void    render_2dmap(t_game *game);
 void	draw_square(t_img *img, int x, int y, int color);
-void	cutmap(t_info *info, t_game *game);;
+void	cutmap2(t_info *info, t_game *game);;
 void	get_player_pos(t_game *game, t_player *player);
 void	drawplayer(t_game *game);
 void	update_game(t_game *game);

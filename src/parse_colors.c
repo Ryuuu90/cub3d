@@ -3,30 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   parse_colors.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: about <about@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rabou-rk <rabou-rk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 16:26:22 by about             #+#    #+#             */
-/*   Updated: 2023/12/15 18:56:15 by about            ###   ########.fr       */
+/*   Updated: 2024/02/03 17:45:10 by rabou-rk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../cub.h"
+#include"cub.h"
 
-void	parse_colors_f(char *line, t_info *info, int *i)
+void	parse_colors_f(char *line, t_info *info, int *i, int *flag)
 {
-	line += 2;
-	info->floor = ft_split(line, ',');
+	char *temp; 
+	int comma_count; 
+	
+	temp = line + 2;
+	comma_count = 0;
+	while(*temp++)
+	{
+		if(*temp == ',')
+		{
+			comma_count++;
+			if(comma_count > 2)
+			{
+				ft_error("Error: invalid floor color format (too many commas)");
+				return;
+			}
+		}
+	}
+	if(*flag)
+		ft_error("Error: duplicated floor color!");
+	info->floor = ft_split(line + 2, ',');
 	if (parse_rgb(info->floor, info, 0) != 0)
 		ft_error("Error : Invalid floor color");
+	*flag = 1;
 	(*i)++;
 	return ;	
 }
-void	parse_colors_c(char *line, t_info *info, int *i)
+void	parse_colors_c(char *line, t_info *info, int *i, int *flag)
 {
-	line += 2;
-	info->ceiling = ft_split(line , ',');
+	char *temp; 
+	int comma_count;
+ 
+	temp = line + 2;
+	comma_count = 0;
+	while(*temp++)
+	{
+		if(*temp == ',')
+		{
+			comma_count++;
+			if(comma_count > 2)
+			{
+				ft_error("Error: invalid floor color format (too many commas)");
+				return;
+			}
+		}
+	}
+	if(*flag)
+		ft_error("Error: duplicated ceiling color!");
+	info->ceiling = ft_split(line + 2 , ',');
 	if (parse_rgb(info->ceiling, info, 1) != 0)
 		ft_error("Error : Invalid ceiling color");
+	*flag = 1;
 	(*i)++;
 	return ;
 }

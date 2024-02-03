@@ -10,7 +10,7 @@ SRCS = 	./src/cub3d.c\
 		./src/parse_textures.c\
 		./get_next_line/get_next_line.c\
 		./get_next_line/get_next_line_utils.c\
-		./src/init_game.c\
+		./src/InitGame.c\
 
 
 CC = cc
@@ -19,7 +19,7 @@ all: $(NAME)
 
 $(NAME):$(SRCS)
 	@make -C libft
-	@$(CC) $(CFLAGS) $(SRCS) ./libft/libft.a -lmlx -framework OpenGL -framework AppKit -o $(NAME)
+	@$(CC) $(CFLAGS) $(SRCS) ./libft/libft.a -lmlx -lXext -lX11 -lm -lmcheck -o $(NAME)
 
 clean:
 	@make -C libft clean

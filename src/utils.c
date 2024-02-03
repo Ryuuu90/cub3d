@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: about <about@student.42.fr>                +#+  +:+       +#+        */
+/*   By: rabou-rk <rabou-rk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 15:28:19 by about             #+#    #+#             */
-/*   Updated: 2023/12/20 21:27:28 by about            ###   ########.fr       */
+/*   Updated: 2024/02/03 18:09:09 by rabou-rk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../cub.h"
+#include"cub.h"
 
 void	ft_error(char *error)
 {
@@ -25,6 +25,7 @@ void	free_all(t_info *info, t_game *game)
 	free(info->west);
 	double_free(info->floor);
 	double_free(info->ceiling);
+	double_free(info->map_2);
 	double_free(game->map2);
 }
 void	double_free(char **line)
@@ -44,16 +45,16 @@ void	initial(t_info *info)
 	info->east = NULL;
 	info->ceiling = 0;
 	info->floor = 0;
-	info->line_index = 0;
 	info->f_1.r = 0;
 	info->f_1.g = 0;
 	info->f_1.b = 0;
 	info->c_1.r = 0;
 	info->c_1.g = 0;
 	info->c_1.b = 0;
-}
-void	assign(char **place, char *line, int *i)
-{
-	*place = parse_path(line);
-	(*i)++;
+	info->found_no = 0;
+	info->found_so = 0;
+	info->found_we = 0;
+	info->found_ea = 0;
+	info->found_f = 0;
+	info->found_c = 0;
 }
